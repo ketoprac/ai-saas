@@ -7,7 +7,6 @@ import { Music } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { ChatCompletionRequestMessage } from "openai";
 
 import { Heading } from "@/components/heading";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
@@ -96,9 +95,11 @@ const MusicPage = () => {
           {!music && !isLoading && (
             <Empty label="No music generated." />
           )}
-          <div>
-            Music will be generated here.
-          </div>
+         {music && (
+          <audio controls className="w-full mt-8">
+            <source src={music} />
+          </audio>
+         )}
         </div>
       </div>
     </div>
