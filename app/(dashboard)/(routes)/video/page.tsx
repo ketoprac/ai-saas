@@ -14,10 +14,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Empty } from "@/components/empty";
 import { Loader } from "@/components/loader";
+import { useProModal } from "@/hooks/use-pro-modal";
 
 import { formSchema } from "./constants";
 
 const VideoPage = () => {
+  const proModal = useProModal();
   const router = useRouter();
   const [video, setVideo] = useState<string>();
 
@@ -39,7 +41,9 @@ const VideoPage = () => {
       setVideo(response.data[0]);
       form.reset();
     } catch (error: any) {
-      // TODO: Open Pro Modal
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      }
       console.log(error);
     } finally {
       router.refresh();
@@ -92,14 +96,15 @@ const VideoPage = () => {
               <Loader />
             </div>
           )}
-          {!video && !isLoading && (
-            <Empty label="No video generated." />
+          {!video && !isLoading && <Empty label="No video generated." />}
+          {video && (
+            <video
+              controls
+              className="w-full aspect-video mt-8 rounded-lg border bg-black"
+            >
+              <source src={video} />
+            </video>
           )}
-         {video && (
-          <video controls className="w-full aspect-video mt-8 rounded-lg border bg-black">
-            <source src={video} />
-          </video>
-         )}
         </div>
       </div>
     </div>
